@@ -9,11 +9,12 @@ This script is designed to automate the process of sending connection requests t
 
 ## Getting Started
 1. Clone the repository
-2. Install dependencies using `npm install` command.
-3. Create a `.env` file and fill in the required values.
-4. Set messages in `messages.js` file. Use `NAME` in messages. This will be replaced with name of your target. Every 
+2. Set LINKEDIN language to English.
+3. Install dependencies using `npm install` command.
+4. Create a `.env` file and fill in the required values.
+5. Set messages in `messages.js` file. Use `NAME` in messages. This will be replaced with name of your target. Every 
    time script choose 1 of message randomly
-5. Run the script using `node index.js`.
+6. Run the script using `node index.js`.
 
 ## Configuration
 The `.env` file should contain the following environment variables:
