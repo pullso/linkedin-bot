@@ -1,9 +1,9 @@
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import fs from 'fs';
-import {getConnectionMessage} from "./messages.js";
+import {getConnectionMessage} from "./modules/messages.js";
 import dotenv from 'dotenv';
-import {loadCookies, saveCookies} from "./cookies.js";
+import {loadCookies, saveCookies} from "./modules/cookies.js";
 
 dotenv.config()
 puppeteer.use(StealthPlugin())
