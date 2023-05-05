@@ -1,4 +1,4 @@
-# Readme.md
+# LINKEDIN-BOT by pullso
 
 This script is designed to automate the process of sending connection requests to LinkedIn users who match a certain search query.
 
@@ -12,15 +12,16 @@ This script is designed to automate the process of sending connection requests t
 2. Set LINKEDIN language to English.
 3. Install dependencies using `npm install` command.
 4. Create a `.env` file and fill in the required values.
-5. Set messages in `messages.js` file. Use `NAME` in messages. This will be replaced with name of your target. Every 
-   time script choose 1 of message randomly
-6. Run the script using `node index.js`.
+5. Set messages in `modules/messages.js` file. Use `NAME` in messages. This will be replaced with name of your target. 
+   Every 
+   time script choose 1 of messages randomly
+6. Run the script using `node index.js` for use with visible browser or `node index.js --stealth` for invisible mode.
 
 ## Configuration
 The `.env` file should contain the following environment variables:
 - `LINKEDIN_LOGIN`: The email address associated with the LinkedIn account
 - `LINKEDIN_PASSWORD`: The password for the LinkedIn account
-- `SEARCH_URL`: The URL of the search results page on LinkedIn
+- `SEARCH_URL`: The URL of the search results page on LinkedIn. **Use 2nd and 1st circles in search. Not 3d!**
 - `MAX_PAGE`: The maximum number of pages to scrape
 - `TIMEOUT`: The maximum time (in milliseconds) to wait between requests
 - `MAX_CLICKED_PROFILES`: The maximum number of profiles to send connection requests to
@@ -32,4 +33,6 @@ The `.env` file should contain the following environment variables:
 3. The script navigates to the search results page using the provided URL.
 4. The script iterates over each profile on the page, sending a connection request to the user if they have a "Connect" button and, optionally, including a personalized message.
 5. The script repeats this process for each subsequent page of search results until it reaches the maximum number of pages specified in the configuration.
-6. Once the maximum number of profiles to send connection requests to has been reached, the script saves the cookies and closes the browser.
+6. Once the maximum number of profiles to send connection requests to has been reached, the script saves the cookies,
+   write log file,
+   and closes the browser.
