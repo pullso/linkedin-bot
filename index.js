@@ -36,11 +36,8 @@ async function launchBrowser(loadCookiesPath) {
 
 const selectors = {
   loginForm: {
-    username: '#username',
-    password: '#password',
-    submit: '.login__form_action_container button',
-  },
-  searchResults: {
+    username: '#username', password: '#password', submit: '.login__form_action_container button',
+  }, searchResults: {
     item: '.entity-result__item',
     subtitle: '.entity-result__primary-subtitle',
     connectButton: 'button',
@@ -48,13 +45,10 @@ const selectors = {
     addMessageButton: 'button[aria-label="Add a note"]',
     inviteHeaderMsg: '.artdeco-modal h2#send-invite-modal',
     name: '.entity-result__title-line--2-lines > span > a > span > span:nth-child(1)',
-  },
-  nextPage: {
+  }, nextPage: {
     button: 'button[aria-label="Next"]',
-  },
-  skills: {
-    skillButton: '.pv2',
-    button: 'button'
+  }, skills: {
+    skillButton: '.pv2', button: 'button'
   }
 };
 
@@ -68,10 +62,7 @@ async function login() {
     await page.goto('https://linkedin.com/login');
     await page.type(selectors.loginForm.username, LINKEDIN_LOGIN, {delay: 100});
     await page.type(selectors.loginForm.password, LINKEDIN_PASSWORD, {delay: 100});
-    await Promise.all([
-      page.click(selectors.loginForm.submit),
-      page.waitForNavigation(),
-    ]);
+    await Promise.all([page.click(selectors.loginForm.submit), page.waitForNavigation(),]);
     console.log('Logged in successfully');
   } catch (err) {
     console.error('Error while logging in:', err);
@@ -84,7 +75,6 @@ async function finish() {
   console.log(`${CLICKED_PROFILES}: CLICKED_PROFILES`);
   await fs.appendFile('log.txt', `Finish at ${new Date().toLocaleString()}\n${LOOKED_PROFILES}: LOOKED_PROFILES\n${CLICKED_PROFILES}: CLICKED_PROFILES\n`, (err) => {
     if (err) throw err;
-
     console.log('Messages written to log file!');
   });
   await browser.close();
@@ -93,31 +83,35 @@ async function finish() {
 async function connectPerson(card) {
   try {
     const subtitle = await card.$eval(selectors.searchResults.subtitle, element => element.textContent.trim());
-    const connectBtn = await card.waitForSelector(selectors.searchResults.connectButton);
-    const buttonText = await connectBtn.evaluate(btn => btn.textContent.trim());
+    let connectBtn
+    try {
+      connectBtn = await card.waitForSelector(selectors.searchResults.connectButton);
+    } catch (error) {
+      console.log('Button not found:', error);
+      connectBtn = null
+    }
+    const buttonText = await connectBtn?.evaluate(btn => btn.textContent.trim());
+    console.log(buttonText, `: text on button`)
     if (buttonText.includes('Connect')) {
-      console.log(`${subtitle}: buttonText`);
-      await connectBtn.click();
+      console.log(subtitle, `: position(subtitle)`)
+
+      await connectBtn?.click();
       if (SHOULD_ADD_MESSAGE) {
         const name = await card.$eval(selectors.searchResults.name, element => element.textContent.trim().split(' ')[0])
         const addMessageBtn = await page.waitForSelector(selectors.searchResults.addMessageButton);
         await addMessageBtn.click();
-        await page.type('textarea', getConnectionMessage(name), {delay: 100});
-        await page.keyboard.down('Shift');
-        await page.keyboard.press('Enter');
-        await page.keyboard.up('Shift');
+        const msg = getConnectionMessage(name)
+        console.log(`writing this message to ${name}: ${msg}`)
+        await page.type('textarea', msg, {delay: 100});
       }
       const sendBtn = await page.waitForSelector(selectors.searchResults.sendButton);
-      await randomTimeout(30000);
       await sendBtn.click();
+      await randomTimeout();
+
 
       CLICKED_PROFILES += 1;
       console.log('Connected');
       await randomTimeout();
-      if (MAX_CLICKED_PROFILES <= CLICKED_PROFILES) {
-        await saveCookies(page, saveCookiesPath);
-        await finish();
-      }
     }
   } catch (err) {
     console.error('Error while connecting to a person:', err);
@@ -132,6 +126,9 @@ async function connectPeople() {
     console.log(`${cards.length}: cards.length`);
     for (const card of cards) {
       await connectPerson(card);
+      if (CLICKED_PROFILES >= MAX_CLICKED_PROFILES) {
+        break;
+      }
     }
   } catch (err) {
     console.error('Error while connecting to people:', err);
@@ -140,11 +137,9 @@ async function connectPeople() {
 
 async function goNext() {
   try {
+    console.log(`try to go next page`)
     const nextBtn = await page.waitForSelector(selectors.nextPage.button, {visible: true});
-    await Promise.all([
-      page.waitForNavigation(),
-      nextBtn.click(),
-    ]);
+    await Promise.all([page.waitForNavigation(), nextBtn.click(),]);
     await randomTimeout();
     console.log('Next page successfully');
   } catch (err) {
@@ -156,8 +151,7 @@ async function start() {
   try {
     await page.setViewport({width: 1080, height: 1024});
     await page.goto('https://www.linkedin.com/feed/');
-    if (!(await page.title()).includes('Feed')) await login();
-    else {
+    if (!(await page.title()).includes('Feed')) await login(); else {
       console.log('login successfully')
     }
     await page.goto(SEARCH_URL);
@@ -166,8 +160,10 @@ async function start() {
     for (let i = 0; i < MAX_PAGE; i++) {
       await scrollDown();
       await connectPeople();
-      await goNext();
+      if (MAX_CLICKED_PROFILES > CLICKED_PROFILES) await goNext();
+      else break;
     }
+    await finish()
   } catch (err) {
     console.error('Error while starting the program:', err);
   }
@@ -194,8 +190,6 @@ async function scrollDown() {
     console.error('Error while scrolling down:', err);
   }
 }
-
-
 
 
 start()
