@@ -14,7 +14,7 @@ const SEARCH_URL = process.env.SEARCH_URL
 const MAX_PAGE = process.env.MAX_PAGE
 const TIMEOUT = process.env.TIMEOUT
 const MAX_CLICKED_PROFILES = process.env.MAX_CLICKED_PROFILES
-const SHOULD_ADD_MESSAGE = process.env.SHOULD_ADD_MESSAGE
+const SHOULD_ADD_MESSAGE = !!process.env.SHOULD_ADD_MESSAGE
 
 let LOOKED_PROFILES = 0;
 let CLICKED_PROFILES = 0;
