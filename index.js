@@ -38,7 +38,7 @@ const selectors = {
   loginForm: {
     username: '#username', password: '#password', submit: '.login__form_action_container button',
   }, searchResults: {
-    item: '.entity-result__item',
+    item: '.WQOVjOcMXxaEDWYckzTWcUHxvWiXmWsOG',
     subtitle: '.entity-result__primary-subtitle',
     connectButton: 'button',
     sendButton: 'button[aria-label="Send now"]',
@@ -104,6 +104,7 @@ async function connectPerson(card) {
         console.log(`writing this message to ${name}: ${msg}`)
         await page.type('textarea', msg, {delay: 100});
       }
+      debugger
       const sendBtn = await page.waitForSelector(selectors.searchResults.sendButton);
       await sendBtn.click();
       await randomTimeout();
