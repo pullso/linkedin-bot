@@ -38,7 +38,7 @@ const selectors = {
   loginForm: {
     username: '#username', password: '#password', submit: '.login__form_action_container button',
   }, searchResults: {
-    item: '.WQOVjOcMXxaEDWYckzTWcUHxvWiXmWsOG',
+    item: '.reusable-search__result-container',
     subtitle: '.entity-result__primary-subtitle',
     connectButton: 'button',
     sendButton: 'button[aria-label="Send now"]',
