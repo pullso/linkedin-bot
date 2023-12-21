@@ -104,7 +104,6 @@ async function connectPerson(card) {
         console.log(`writing this message to ${name}: ${msg}`)
         await page.type('textarea', msg, {delay: 100});
       }
-      debugger
       const sendBtn = await page.waitForSelector(selectors.searchResults.sendButton);
       await sendBtn.click();
       await randomTimeout();
