@@ -37,17 +37,20 @@ async function launchBrowser(loadCookiesPath) {
 const selectors = {
   loginForm: {
     username: '#username', password: '#password', submit: '.login__form_action_container button',
-  }, searchResults: {
-    item: '.reusable-search__result-container',
-    subtitle: '.entity-result__primary-subtitle',
-    connectButton: 'button',
-    sendButton: 'button[aria-label="Send now"]',
+  },
+  searchResults: {
+    item: '.search-results-container > div:nth-child(2) > div > ul > li',
+    subtitle: '.mb1 > div:nth-child(2)',
+    connectButton: 'div > div > div > div:nth-child(3) button',
+    sendButton: 'button[aria-label="Send without a note"]',
     addMessageButton: 'button[aria-label="Add a note"]',
     inviteHeaderMsg: '.artdeco-modal h2#send-invite-modal',
     name: '.entity-result__title-line--2-lines > span > a > span > span:nth-child(1)',
-  }, nextPage: {
+  },
+  nextPage: {
     button: 'button[aria-label="Next"]',
-  }, skills: {
+  },
+  skills: {
     skillButton: '.pv2', button: 'button'
   }
 };
