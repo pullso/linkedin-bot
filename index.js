@@ -4,6 +4,7 @@ import fs from 'fs';
 import {getConnectionMessage} from "./modules/messages.js";
 import dotenv from 'dotenv';
 import {loadCookies, saveCookies} from "./modules/cookies.js";
+import { randomTimeout } from "./utils/timeout.js";
 
 dotenv.config()
 puppeteer.use(StealthPlugin())
@@ -12,7 +13,6 @@ const LINKEDIN_LOGIN = process.env.LINKEDIN_LOGIN
 const LINKEDIN_PASSWORD = process.env.LINKEDIN_PASSWORD
 const SEARCH_URL = process.env.SEARCH_URL
 const MAX_PAGE = process.env.MAX_PAGE
-const TIMEOUT = process.env.TIMEOUT
 const MAX_CLICKED_PROFILES = process.env.MAX_CLICKED_PROFILES
 const SHOULD_ADD_MESSAGE = process.env.SHOULD_ADD_MESSAGE === 'true';
 
@@ -54,11 +54,6 @@ const selectors = {
     skillButton: '.pv2', button: 'button'
   }
 };
-
-async function randomTimeout(maxTimeout = TIMEOUT) {
-  const timeout = Math.floor(Math.random() * maxTimeout) + 1;
-  return new Promise(resolve => setTimeout(resolve, timeout));
-}
 
 async function login() {
   try {
