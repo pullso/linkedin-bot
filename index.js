@@ -4,6 +4,7 @@ import fs from 'fs';
 import {getConnectionMessage} from "./modules/messages.js";
 import dotenv from 'dotenv';
 import {loadCookies, saveCookies} from "./modules/cookies.js";
+import { randomTimeout } from "./utils/timeout.js";
 
 dotenv.config()
 puppeteer.use(StealthPlugin())
@@ -12,7 +13,6 @@ const LINKEDIN_LOGIN = process.env.LINKEDIN_LOGIN
 const LINKEDIN_PASSWORD = process.env.LINKEDIN_PASSWORD
 const SEARCH_URL = process.env.SEARCH_URL
 const MAX_PAGE = process.env.MAX_PAGE
-const TIMEOUT = process.env.TIMEOUT
 const MAX_CLICKED_PROFILES = process.env.MAX_CLICKED_PROFILES
 const SHOULD_ADD_MESSAGE = process.env.SHOULD_ADD_MESSAGE === 'true';
 
@@ -37,25 +37,23 @@ async function launchBrowser(loadCookiesPath) {
 const selectors = {
   loginForm: {
     username: '#username', password: '#password', submit: '.login__form_action_container button',
-  }, searchResults: {
-    item: '.reusable-search__result-container',
-    subtitle: '.entity-result__primary-subtitle',
-    connectButton: 'button',
-    sendButton: 'button[aria-label="Send now"]',
+  },
+  searchResults: {
+    item: '.search-results-container > div:nth-child(2) > div > ul > li',
+    subtitle: '.mb1 > div:nth-child(2)',
+    connectButton: 'div > div > div > div:nth-child(3) button',
+    sendButton: 'button[aria-label="Send without a note"]',
     addMessageButton: 'button[aria-label="Add a note"]',
     inviteHeaderMsg: '.artdeco-modal h2#send-invite-modal',
     name: '.entity-result__title-line--2-lines > span > a > span > span:nth-child(1)',
-  }, nextPage: {
+  },
+  nextPage: {
     button: 'button[aria-label="Next"]',
-  }, skills: {
+  },
+  skills: {
     skillButton: '.pv2', button: 'button'
   }
 };
-
-async function randomTimeout(maxTimeout = TIMEOUT) {
-  const timeout = Math.floor(Math.random() * maxTimeout) + 1;
-  return new Promise(resolve => setTimeout(resolve, timeout));
-}
 
 async function login() {
   try {
